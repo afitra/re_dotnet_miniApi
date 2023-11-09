@@ -39,7 +39,7 @@ public class RegionsController : ControllerBase
         if (regions == null) return NotFound();
         var result = RegionDto.SetSingleData(regions);
 
-        return Ok(regions);
+        return Ok(result);
     }
 
     [HttpPost]
@@ -52,5 +52,22 @@ public class RegionsController : ControllerBase
 
         return CreatedAtAction(nameof(GetById), new { id = regionDomainModel.Id },
             RegionDto.SetSingleData(regionDomainModel));
+    }
+
+
+    [HttpPut]
+    [Route("{id:Guid}")]
+    public IActionResult UpdateById([FromRoute] Guid id, [FromBody] RegionRequestDto request)
+    {
+        var region = dbContext.Regions.Find(id);
+        if (region == null) return NotFound();
+
+        region.Code = request.Code;
+        region.Name = request.Name;
+        region.RegionImageUrl = request.RegionImageUrl;
+        dbContext.SaveChanges();
+
+        var result = RegionDto.SetSingleData(region);
+        return Ok(result);
     }
 }
