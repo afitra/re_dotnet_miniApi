@@ -65,6 +65,22 @@ public class RegionsController : ControllerBase
         region.Code = request.Code;
         region.Name = request.Name;
         region.RegionImageUrl = request.RegionImageUrl;
+        dbContext.Regions.Update(region);
+        dbContext.SaveChanges();
+
+        var result = RegionDto.SetSingleData(region);
+        return Ok(result);
+    }
+
+    [HttpDelete]
+    [Route("{id:Guid}")]
+    public IActionResult UpdateById([FromRoute] Guid id)
+    {
+        var region = dbContext.Regions.Find(id);
+        if (region == null) return NotFound();
+
+
+        dbContext.Regions.Remove(region);
         dbContext.SaveChanges();
 
         var result = RegionDto.SetSingleData(region);
