@@ -29,6 +29,7 @@ public class RegionsController : ControllerBase
         return Ok(result);
     }
 
+    // GET
     [HttpGet]
     [Route("{id:Guid}")]
     public IActionResult GetById([FromRoute] Guid id)
@@ -39,5 +40,17 @@ public class RegionsController : ControllerBase
         var result = RegionDto.SetSingleData(regions);
 
         return Ok(regions);
+    }
+
+    [HttpPost]
+    public IActionResult Create(RegionRequestDto request)
+    {
+        var regionDomainModel = RegionRequestDto.SetRequestDto(request);
+
+        dbContext.Regions.Add(regionDomainModel);
+        dbContext.SaveChanges();
+
+        return CreatedAtAction(nameof(GetById), new { id = regionDomainModel.Id },
+            RegionDto.SetSingleData(regionDomainModel));
     }
 }
