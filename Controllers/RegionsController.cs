@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using miniApi.Data;
+using miniApi.Models.DTO;
 
 namespace miniApi.Controllers;
 
@@ -24,7 +25,8 @@ public class RegionsController : ControllerBase
         var regions = dbContext.Regions.ToList();
         if (regions == null) return NotFound();
 
-        return Ok(regions);
+        var result = RegionDto.SetArrayData(regions);
+        return Ok(result);
     }
 
     [HttpGet]
@@ -34,6 +36,7 @@ public class RegionsController : ControllerBase
         var regions = dbContext.Regions.Find(id);
         // var regions = dbContext.Regions.FirstOrDefault(x => x.Id == id);
         if (regions == null) return NotFound();
+        var result = RegionDto.SetSingleData(regions);
 
         return Ok(regions);
     }
